@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-amplitude-plugin" version="1.0.0"
+    xmlns="http://apache.org/cordova/ns/plugins/1.0">
+  <name>AmplitudePlugin</name>
+  <js-module name="AmplitudePlugin" src="www/AmplitudePlugin.js">
+    <clobbers target="cordova.plugins.AmplitudePlugin" />
+  </js-module>
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="AmplitudePlugin">
+        <param name="android-package" value="com.huckleberry_labs.amplitude.AmplitudePlugin" />
+        <param name="onload" value="true" />
+      </feature>
+    </config-file>
+    <framework src="com.amplitude:analytics-android:1.+" />
+    <framework src="com.google.android.gms:play-services-appset:16.0.2" />
+    <source-file src="src/android/AmplitudePlugin.java" target-dir="src/com/huckleberry_labs/amplitude/AmplitudePlugin" />
+  </platform>
+  <platform name="ios">
+    <config-file parent="/*" target="config.xml">
+      <preference name="deployment-target" value="13.0"/>
+      <feature name="AmplitudePlugin">
+        <param name="ios-package" value="AmplitudePlugin" />
+      </feature>
+    </config-file>
+    <source-file src="src/ios/AmplitudePlugin.swift" />
+    <podspec>
+      <pods use-frameworks="true">
+        <pod name="AmplitudeSwift" spec="~> 1.1" />
+      </pods>
+    </podspec>
+  </platform>
+</plugin>

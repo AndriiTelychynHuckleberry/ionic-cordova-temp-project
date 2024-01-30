@@ -1,0 +1,18 @@
+{
+  "name": "cordova-amplitude-plugin",
+  "version": "1.0.0",
+  "description": "A lightweight Cordova plugin providing a seamless wrapper for integrating Amplitude analytics functionalities into your mobile application. This plugin simplifies the process of invoking Amplitude's API, offering easy-to-use methods for tracking events, setting user properties, and managing session data in your Cordova-based projects.",
+  "cordova": {
+    "id": "cordova-amplitude-plugin",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "author": "Marko Rajevic",
+  "license": "ISC"
+}
