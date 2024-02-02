@@ -1,5 +1,8 @@
 package com.huckleberry_labs.amplitude;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 import org.json.JSONArray;
@@ -13,6 +16,7 @@ import java.util.Iterator;
 import com.amplitude.android.Amplitude;
 import com.amplitude.android.Configuration;
 import com.amplitude.android.DefaultTrackingOptions;
+import com.amplitude.android.utilities.DefaultEventUtils;
 import com.amplitude.core.events.Identify;
 
 public class AmplitudePlugin extends CordovaPlugin {
@@ -22,7 +26,6 @@ public class AmplitudePlugin extends CordovaPlugin {
     protected void pluginInitialize() {
         super.pluginInitialize();
 
-        // String apiKey = this.preferences.getString("com.amplitude.api_key", null);
         String apiKey = "d1570fe4bed6b33622c5f788e2e9a09a";
 
         // Configuration
@@ -38,6 +41,8 @@ public class AmplitudePlugin extends CordovaPlugin {
         configuration.setDefaultTracking(defaultTrackingOptions);
 
         amplitudeInstance = new Amplitude(configuration);
+
+        triggerOnCreateEvents(defaultTrackingOptions);
     }
 
     @Override
@@ -145,6 +150,27 @@ public class AmplitudePlugin extends CordovaPlugin {
             callbackContext.error("Error in identify operation: " + e.getMessage());
             return false;
         }
+    }
+
+    private void triggerOnCreateEvents(DefaultTrackingOptions defaultTrackingOptions) {
+        if (!defaultTrackingOptions.getAppLifecycles()) return;
+
+        amplitudeInstance.isBuilt().invokeOnCompletion((exception) -> {
+            DefaultEventUtils utils = new DefaultEventUtils(amplitudeInstance);
+            PackageManager packageManager = cordova.getActivity().getPackageManager();
+            PackageInfo packageInfo = new PackageInfo();
+
+            try {
+                packageInfo = packageManager.getPackageInfo(cordova.getActivity().getPackageName(), 0);
+            } catch (Exception ex) {
+                System.out.println("Error occurred in getting package info. " + ex.getMessage());
+            }
+            
+            utils.trackAppUpdatedInstalledEvent(packageInfo);
+            utils.trackDeepLinkOpenedEvent(cordova.getActivity());
+
+            return null;
+        });
     }
 
     // ... Additional methods if needed ...
